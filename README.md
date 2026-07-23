@@ -94,6 +94,7 @@ This project intentionally keeps everything in one file for simplicity and easy 
 - Add sound effects and more advanced animations for moves and wins.
 - Track score across multiple rounds (wins for X, wins for O, draws).
 
-## License
 
-This project currently does not specify a license. If you plan to make it open source, consider adding a license file later (for example, MIT or GPL).
+
+
+
