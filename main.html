@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>N×N Tic-Tac-Toe</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f3f4f6;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .game-container {
+      background: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+      padding: 30px;
+      max-width: 700px;
+      width: 100%;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 2rem;
+      color: #1f2937;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      font-size: 0.95rem;
+      color: #6b7280;
+      margin-bottom: 20px;
+    }
+
+    .controls {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+
+    .control-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    label {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: #374151;
+    }
+
+    select {
+      padding: 8px 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      background: #f9fafb;
+      cursor: pointer;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    select:focus {
+      border-color: #3b82f6;
+    }
+
+    .win-info {
+      font-size: 0.85rem;
+      color: #6b7280;
+      margin-bottom: 12px;
+    }
+
+    .win-info b {
+      color: #1f2937;
+    }
+
+    .status {
+      font-size: 1.2rem;
+      font-weight: 600;
+      min-height: 1.6em;
+      margin-bottom: 16px;
+      transition: color 0.3s;
+    }
+
+    .status.x-turn {
+      color: #2563eb;
+    }
+
+    .status.o-turn {
+      color: #dc2626;
+    }
+
+    .status.win {
+      color: #059669;
+    }
+
+    .status.draw {
+      color: #6b7280;
+    }
+
+    .board-wrapper {
+      display: inline-block;
+      background: #e5e7eb;
+      padding: 6px;
+      border-radius: 12px;
+      margin-bottom: 16px;
+    }
+
+    .board {
+      display: grid;
+      gap: 4px;
+    }
+
+    .cell {
+      background: #ffffff;
+      border: none;
+      border-radius: 8px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s ease;
+      outline: none;
+      user-select: none;
+    }
+
+    .cell:hover:not(:disabled) {
+      background: #f3f4f6;
+      transform: scale(1.02);
+    }
+
+    .cell:active:not(:disabled) {
+      transform: scale(0.98);
+    }
+
+    .cell:disabled {
+      cursor: default;
+    }
+
+    .cell.x {
+      color: #2563eb;
+    }
+
+    .cell.o {
+      color: #dc2626;
+    }
+
+    .cell.win {
+      background: #2563eb !important;
+      color: #ffffff !important;
+      animation: pulse 0.5s ease;
+    }
+
+    .cell.win.o {
+      background: #dc2626 !important;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+
+    .btn {
+      padding: 10px 24px;
+      border: none;
+      border-radius: 8px;
+      background: #111827;
+      color: #ffffff;
+      font-size: 0.95rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn:hover {
+      background: #374151;
+    }
+
+    .btn:active {
+      transform: scale(0.98);
+    }
+
+    .legend {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      margin-top: 12px;
+      font-size: 0.85rem;
+      color: #6b7280;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .legend-box {
+      width: 20px;
+      height: 20px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .legend-box.x {
+      background: #2563eb;
+    }
+
+    .legend-box.o {
+      background: #dc2626;
+    }
+  </style>
+</head>
+<body>
+  <div class="game-container">
+    <h1>N×N Tic-Tac-Toe</h1>
+    <p class="subtitle">Classic strategy, scaled up</p>
+
+    <div class="controls">
+      <div class="control-group">
+        <label for="grid-size">Grid Size:</label>
+        <select id="grid-size">
+          <option value="3">3 × 3</option>
+          <option value="4">4 × 4</option>
+          <option value="5" selected>5 × 5</option>
+          <option value="6">6 × 6</option>
+          <option value="7">7 × 7</option>
+          <option value="8">8 × 8</option>
+          <option value="9">9 × 9</option>
+          <option value="10">10 × 10</option>
+        </select>
+      </div>
+      <button class="btn" id="reset-btn">New Game</button>
+    </div>
+
+    <div class="win-info">
+      Win condition: <b id="win-need">3</b> in a row
+      <span id="win-auto">(auto: 3 for N ≤ 5, 4 for N > 5)</span>
+    </div>
+
+    <div class="status x-turn" id="status">Player X's turn</div>
+
+    <div class="board-wrapper">
+      <div class="board" id="board"></div>
+    </div>
+
+    <div class="legend">
+      <div class="legend-item">
+        <div class="legend-box x">X</div>
+        <span>Player X</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-box o">O</div>
+        <span>Player O</span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      // DOM Elements
+      const boardEl = document.getElementById('board');
+      const statusEl = document.getElementById('status');
+      const gridSizeSelect = document.getElementById('grid-size');
+      const resetBtn = document.getElementById('reset-btn');
+      const winNeedEl = document.getElementById('win-need');
+      const winAutoEl = document.getElementById('win-auto');
+
+      // Game State
+      let n = 5;              // Grid size (3 to 10)
+      let winNeed = 3;        // Cells in a row to win
+      let cells = [];         // Array of cell values ('', 'X', or 'O')
+      let currentPlayer = 'X';
+      let gameOver = false;
+      let moveCount = 0;
+
+      /**
+       * Determine win condition based on grid size
+       * N ≤ 5 → need 3 in a row
+       * N > 5 → need 4 in a row
+       */
+      function getWinNeed(size) {
+        return size <= 5 ? 3 : 4;
+      }
+
+      /**
+       * Update win condition display text
+       */
+      function updateWinDisplay() {
+        winNeed = getWinNeed(n);
+        winNeedEl.textContent = winNeed;
+        winAutoEl.textContent = `(auto: 3 for N ≤ 5, 4 for N > 5)`;
+      }
+
+      /**
+       * Calculate cell size based on grid size to keep board reasonable
+       */
+      function getCellSize(size) {
+        if (size <= 5) return 64;
+        if (size <= 7) return 52;
+        return 40;
+      }
+
+      /**
+       * Initialize or reset the game
+       */
+      function initGame() {
+        n = parseInt(gridSizeSelect.value, 10);
+        updateWinDisplay();
+
+        // Reset state
+        cells = Array(n * n).fill('');
+        currentPlayer = 'X';
+        gameOver = false;
+        moveCount = 0;
+
+        // Render board
+        renderBoard();
+
+        // Update status
+        updateStatus("Player X's turn", 'x-turn');
+      }
+
+      /**
+       * Render the grid of cells
+       */
+      function renderBoard() {
+        boardEl.innerHTML = '';
+
+        const cellSize = getCellSize(n);
+        const fontSize = Math.round(cellSize * 0.55);
+
+        // Set CSS grid columns
+        boardEl.style.gridTemplateColumns = `repeat(${n}, ${cellSize}px)`;
+
+        // Create cells
+        for (let i = 0; i < n * n; i++) {
+          const cell = document.createElement('button');
+          cell.className = 'cell';
+          cell.style.width = cellSize + 'px';
+          cell.style.height = cellSize + 'px';
+          cell.style.fontSize = fontSize + 'px';
+          cell.dataset.index = i;
+
+          cell.addEventListener('click', function() {
+            handleCellClick(i);
+          });
+
+          boardEl.appendChild(cell);
+        }
+      }
+
+      /**
+       * Get cell element by index
+       */
+      function getCellElement(index) {
+        return boardEl.children[index];
+      }
+
+      /**
+       * Update a single cell's visual appearance
+       */
+      function updateCellVisual(index) {
+        const el = getCellElement(index);
+        const val = cells[index];
+
+        if (!val) {
+          el.textContent = '';
+          el.className = 'cell';
+          el.disabled = false;
+          return;
+        }
+
+        el.textContent = val;
+        el.disabled = true;
+        el.className = 'cell ' + val.toLowerCase();
+      }
+
+      /**
+       * Update status message and color
+       */
+      function updateStatus(message, className) {
+        statusEl.textContent = message;
+        statusEl.className = 'status ' + (className || '');
+      }
+
+      /**
+       * Handle a cell click
+       */
+      function handleCellClick(index) {
+        // Ignore if game over or cell already taken
+        if (gameOver || cells[index]) return;
+
+        // Place mark
+        cells[index] = currentPlayer;
+        moveCount++;
+        updateCellVisual(index);
+
+        // Check for win
+        const winLine = checkWin(index);
+        if (winLine) {
+          gameOver = true;
+          highlightWin(winLine);
+          updateStatus('Player ' + currentPlayer + ' wins!', 'win');
+          return;
+        }
+
+        // Check for draw
+        if (moveCount === n * n) {
+          gameOver = true;
+          updateStatus("It's a draw!", 'draw');
+          return;
+        }
+
+        // Switch player
+        currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+        const statusMsg = "Player " + currentPlayer + "'s turn";
+        const statusClass = currentPlayer === 'X' ? 'x-turn' : 'o-turn';
+        updateStatus(statusMsg, statusClass);
+      }
+
+      /**
+       * Check if the last move created a winning line
+       * Returns array of winning cell indices, or null
+       */
+      function checkWin(lastIndex) {
+        const row = Math.floor(lastIndex / n);
+        const col = lastIndex % n;
+        const player = cells[lastIndex];
+
+        // Four directions to check: horizontal, vertical, two diagonals
+        const directions = [
+          [0, 1],   // Horizontal (right)
+          [1, 0],   // Vertical (down)
+          [1, 1],   // Diagonal down-right
+          [1, -1]   // Diagonal down-left
+        ];
+
+        for (const [dr, dc] of directions) {
+          let line = [lastIndex];
+
+          // Search forward
+          let r = row + dr;
+          let c = col + dc;
+          while (r >= 0 && r < n && c >= 0 && c < n && cells[r * n + c] === player) {
+            line.push(r * n + c);
+            r += dr;
+            c += dc;
+          }
+
+          // Search backward
+          r = row - dr;
+          c = col - dc;
+          while (r >= 0 && r < n && c >= 0 && c < n && cells[r * n + c] === player) {
+            line.push(r * n + c);
+            r -= dr;
+            c -= dc;
+          }
+
+          // If we have enough in a row, return the winning cells
+          if (line.length >= winNeed) {
+            // Return exactly winNeed cells (the first contiguous ones found)
+            return line.slice(0, winNeed);
+          }
+        }
+
+        return null;
+      }
+
+      /**
+       * Highlight the winning cells
+       */
+      function highlightWin(indices) {
+        for (const idx of indices) {
+          const el = getCellElement(idx);
+          el.classList.add('win');
+          if (cells[idx] === 'O') {
+            el.classList.add('o');
+          }
+        }
+      }
+
+      // Event Listeners
+      gridSizeSelect.addEventListener('change', initGame);
+      resetBtn.addEventListener('click', initGame);
+
+      // Start the game
+      initGame();
+    })();
+  </script>
+</body>
+</html>
