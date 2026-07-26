@@ -1,6 +1,6 @@
 # N×N Tic-Tac-Toe
 
-A dynamic, browser-based Tic-Tac-Toe game built in a single `main.html` file using HTML, CSS, and JavaScript. Play on grid sizes from 3×3 up to 10×10, with the win condition automatically adjusted to keep the game fair and challenging.
+A dynamic, browser-based Tic-Tac-Toe game built in a single `index.html` file using HTML, CSS, and JavaScript. Play on grid sizes from 3×3 up to 10×10, with the win condition automatically adjusted to keep the game fair and challenging.
 
 ## Features
 
@@ -12,7 +12,7 @@ A dynamic, browser-based Tic-Tac-Toe game built in a single `main.html` file usi
 - Visual win highlight: winning cells are animated and colored to emphasize the winning line.
 - Responsive board sizing: cell size and font automatically adjust so larger grids still fit comfortably on screen.
 - “New Game” button to instantly reset the board and start over with the current grid size.
-- All logic, styles, and markup bundled into a single `main.html` file—no external dependencies.
+- All logic, styles, and markup bundled into a single `index.html` file—no external dependencies.
 
 ## Tech Stack
 
@@ -36,12 +36,12 @@ No server, build tools, or package manager are required; everything runs from th
    cd <your-repo-name>
    ```
 
-2. Make sure `main.html` is in the project root.
+2. Make sure `index.html` is in the project root.
 
 ### Running the Game
 
-1. Open the `main.html` file in your browser:
-   - Double-click `main.html`, or
+1. Open the `index.html` file in your browser:
+   - Double-click `index.html`, or
    - Right-click → “Open with” → choose your browser.
 
 2. The N×N Tic-Tac-Toe interface will load and you can start playing immediately.
@@ -84,7 +84,7 @@ This project intentionally keeps everything in one file for simplicity and easy 
 
 ```text
 .
-└─ main.html   # Contains HTML markup, CSS styles, and JavaScript game logic
+└─ index.html   # Contains HTML markup, CSS styles, and JavaScript game logic
 ```
 
 ## Possible Extensions
